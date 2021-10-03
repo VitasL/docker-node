@@ -1,7 +1,7 @@
 FROM alpine:3.7
 MAINTAINER Jason <jason@gymoo.cn>
 
-ENV NODE_VERSION 8.9.4
+ENV NODE_VERSION 14.15.0
 ENV YARN_VERSION 1.3.2
 
 # install node (without npm).
