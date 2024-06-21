@@ -1,7 +1,7 @@
 FROM alpine:3.7
 MAINTAINER Jason <jason@gymoo.cn>
 
-ENV NODE_VERSION 14.15.0
+ENV NODE_VERSION 16.14.0
 ENV YARN_VERSION 1.3.2
 
 # install node (without npm).
@@ -15,17 +15,12 @@ RUN apk add --no-cache \
         libgcc \
         linux-headers \
         make \
-        python \
-    && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
-    && tar -xf "node-v$NODE_VERSION.tar.xz" \
-    && cd "node-v$NODE_VERSION" \
-    && ./configure --without-npm \
-    && make -j$(getconf _NPROCESSORS_ONLN) \
-    && make install \
+        python3 \
+        tar \
+    && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
+    && tar -xf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && apk del .build-deps \
-    && cd .. \
-    && rm -Rf "node-v$NODE_VERSION" \
-    && rm "node-v$NODE_VERSION.tar.xz"
+    && rm "node-v$NODE_VERSION-linux-x64.tar.xz"
 
 # install yarn.
 RUN apk add --no-cache --virtual .build-deps-yarn \
@@ -42,5 +37,4 @@ WORKDIR /app
 
 EXPOSE 80
 
-ENTRYPOINT ["yarn"]
-CMD ["start"]
+CMD ["node", ".output/server/index.mjs"]
