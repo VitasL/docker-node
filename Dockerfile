@@ -4,35 +4,36 @@ MAINTAINER Jason <jason@gymoo.cn>
 ENV NODE_VERSION 16.14.0
 ENV YARN_VERSION 1.3.2
 
-# Install necessary dependencies
+# install node (without npm).
 RUN apk add --no-cache \
-    libstdc++ \
-    curl \
-    tar \
-    xz \
+        libstdc++ \
     && apk add --no-cache --virtual .build-deps \
+        binutils-gold \
+        curl \
         g++ \
         gcc \
         libgcc \
         linux-headers \
         make \
-        python3
-
-# Download and install Node.js
-RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
-    && tar -xf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-    && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
+        python \
+    && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
+    && tar -xf "node-v$NODE_VERSION.tar.xz" \
+    && cd "node-v$NODE_VERSION" \
+    && ./configure --without-npm \
+    && make -j$(getconf _NPROCESSORS_ONLN) \
+    && make install \
     && apk del .build-deps \
-    && rm "node-v$NODE_VERSION-linux-x64.tar.xz"
+    && cd .. \
+    && rm -Rf "node-v$NODE_VERSION" \
+    && rm "node-v$NODE_VERSION.tar.xz"
 
-# Download and install Yarn
-RUN curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+# install yarn.
+RUN apk add --no-cache --virtual .build-deps-yarn \
+        curl \
+    && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
     && mkdir -p /opt/yarn \
     && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/yarn --strip-components=1 \
     && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarn \
     && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarnpkg \
-    && rm yarn-v$YARN_VERSION.tar.gz
-
-
-
-#CMD ["node", ".output/server/index.mjs"]
+    && rm yarn-v$YARN_VERSION.tar.gz \
+    && apk del .build-deps-yarn
