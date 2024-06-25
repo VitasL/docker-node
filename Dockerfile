@@ -37,6 +37,6 @@ WORKDIR /app
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 80
 
 CMD ["node", ".output/server/index.mjs"]
