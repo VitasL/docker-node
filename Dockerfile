@@ -9,6 +9,7 @@ RUN apk add --no-cache \
     libstdc++ \
     curl \
     tar \
+    xz \
     && apk add --no-cache --virtual .build-deps \
         g++ \
         gcc \
