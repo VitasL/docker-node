@@ -33,12 +33,6 @@ RUN curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$
     && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarnpkg \
     && rm yarn-v$YARN_VERSION.tar.gz
 
-WORKDIR /app
 
-
-EXPOSE 80
-
-ENTRYPOINT ["yarn"]
-CMD ["preview"]
 
 #CMD ["node", ".output/server/index.mjs"]
