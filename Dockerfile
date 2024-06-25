@@ -35,7 +35,6 @@ RUN curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$
 
 WORKDIR /app
 
-COPY . .
 
 EXPOSE 80
 
