@@ -38,4 +38,7 @@ WORKDIR /app
 
 EXPOSE 80
 
-CMD ["node", ".output/server/index.mjs"]
+ENTRYPOINT ["yarn"]
+CMD ["start"]
+
+#CMD ["node", ".output/server/index.mjs"]
